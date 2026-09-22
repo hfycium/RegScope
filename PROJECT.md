@@ -39,7 +39,7 @@ Git Diff
 - Python
 - FastAPI
 - pytest
-- 单仓库
+- 单仓库分析（一次只分析一个目标仓库，不做跨仓库依赖分析）
 - Git commit / diff
 - 函数级变更分析
 - API 级影响分析

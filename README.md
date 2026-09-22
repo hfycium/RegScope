@@ -28,50 +28,43 @@ Git Diff
 ## Roadmap
 
 见 [ROADMAP.md](./ROADMAP.md)
+
+## 仓库划分
+
+RegScope 平台代码与被测服务分别放在两个仓库，互不包含：
+
+```text
+F:\大学\大三上\
+│
+├── RegScope/                 平台仓库：分析逻辑与项目文档
+│   ├── README.md             给别人看：现在项目是什么状态
+│   ├── PROJECT.md            管项目定义、MVP 和总体边界
+│   ├── ROADMAP.md            管版本推进顺序
+│   ├── TASK.md               管现在这一小步
+│   ├── AGENT.md              管 AI 行为
+│   ├── docs/
+│   │   ├── decisions/        只记录真正重要的技术决策
+│   │   └── research/         调研记录
+│   └── src/                  平台代码（V1 开始写）
+│
+└── order-service/            被测服务仓库：用户、商品、订单
+    ├── app/                  FastAPI 服务，分 api / service / repository 三层
+    └── tests/                pytest 接口测试
 ```
-RegScope/
-│
-├── README.md
-│   给别人看：现在项目是什么状态
-│
-├── PROJECT.md
-│   管项目定义、MVP和总体边界
-│
-├── ROADMAP.md
-│   管版本推进顺序
-│
-├── TASK.md
-│   管现在这一小步
-│
-├── AGENTS.md
-│   管AI行为
-│
-├── docs/
-│   └── decisions/
-│       只记录真正重要的技术决策
-│
-└── src/
 
-PROJECT
-“我们去哪？”
+被测服务不在 RegScope 目录内，RegScope 通过路径参数指向它。
+这样以后分析别的项目时，不用改动 RegScope 自身结构。
 
-↓
+文档的阅读顺序：
 
-ROADMAP
-“分几站去？”
-
-↓
-
-TASK
-“现在走哪一步？”
-
-↓
-
-AGENTS
-“AI走路的时候遵守什么规则？”
-
-↓
-
-README
-“目前已经走到哪里了？”
+```text
+PROJECT   “我们去哪？”
+   ↓
+ROADMAP   “分几站去？”
+   ↓
+TASK      “现在走哪一步？”
+   ↓
+AGENT     “AI 走路的时候遵守什么规则？”
+   ↓
+README    “目前已经走到哪里了？”
 ```
