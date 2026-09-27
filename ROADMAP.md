@@ -393,3 +393,44 @@ Mutation Testing
 缓存 / 异步调用等场景
 
 这一阶段不属于 MVP。
+
+
+## 测试输入与被测系统
+
+RegScope 不负责从零生成完整测试集。
+
+核心输入是已有的、可独立执行的 pytest 测试。
+
+测试用例应尽量满足：
+
+- 每个测试具有稳定标识
+- 测试之间尽量相互独立
+- 包含明确断言
+- 不同测试覆盖不同执行路径
+- 能建立稳定的 test → code mapping
+
+RegScope 与测试来源解耦。
+
+测试可以来自：
+
+1. 项目已有 pytest 测试
+2. RegScope 自带的小型可控 Demo
+3. 外部真实 FastAPI 项目
+4. 后续通过 OpenAPI / Schemathesis 等方式自动生成或扩充的测试
+
+自动生成测试不是 RegScope MVP 的核心能力。
+RegScope 的核心问题是：
+
+已有测试集
+→ 代码发生变化
+→ 识别受影响范围
+→ 选择需要重新执行的测试
+→ 验证选择效果
+
+---
+
+## 延后评估 — RepoMind AST 能力复用
+
+当前 V1 使用 Python 标准库 `ast` 完成最小的“覆盖率行号 → 函数标识”映射，目的是先理解输入、输出与误差边界，不提前耦合其他项目。
+
+在 V3 之后、扩展调用关系与跨文件符号解析前，评估是否复用 RepoMind 中基于 Tree-sitter 的 repomap、relation processor 与 symbol resolver。评估重点是：依赖成本、Python/FastAPI 解析准确性，以及是否能替代当前 MVP 而不破坏已有测试与映射格式。

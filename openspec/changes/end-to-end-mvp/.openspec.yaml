@@ -1,0 +1,3 @@
+schema: spec-driven
+created: 2026-09-27
+goal: 在单个 FastAPI 目标仓库上跑通 V0–V5 的最小纵向切片。

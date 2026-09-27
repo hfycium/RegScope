@@ -98,3 +98,14 @@ Bug
 → Failing Tests
 
 作为实验 Ground Truth。
+
+Observation:
+coverage 的 executed_lines 会包含 import、类定义、应用初始化等运行时噪音。
+
+Example:
+schemas.py 可能显示 100% covered，
+但这并不代表当前测试真正验证了所有 schema 的业务意义。
+
+Implication for RegScope:
+后续不能直接把 raw executed_lines 当作 test → business code，
+需要在 line → function 阶段或后续过滤阶段处理噪音。

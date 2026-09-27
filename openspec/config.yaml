@@ -1,0 +1,34 @@
+schema: spec-driven
+
+context: |
+  RegScope is a Python 3.12 platform for explainable, change-aware regression
+  test selection of FastAPI services. The system under test lives in a separate
+  sibling repository and is always addressed by a path parameter. Keep the MVP
+  dependency-light: Python stdlib AST, Git, pytest, and coverage.py.
+  Preserve the pipeline: Git diff -> changed functions -> affected endpoints ->
+  test-to-function coverage mapping -> selected tests -> evaluation.
+
+rules:
+  proposal:
+    - State explicit non-goals and measurable acceptance criteria.
+  tasks:
+    - Keep every task independently verifiable with a command or automated test.
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+#     Tech stack: TypeScript, React, Node.js
+#     We use conventional commits
+#     Domain: e-commerce platform
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
