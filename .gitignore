@@ -2,6 +2,7 @@ __pycache__/
 *.py[oc]
 .pytest_cache/
 .pytest-tmp/
+.pytest-tmp-run/
 .uv-cache/
 build/
 dist/
