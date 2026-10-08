@@ -21,13 +21,28 @@ Git Diff
 
 ## Status
 
-🚧 Under Development
+✅ End-to-end MVP implemented; further validation and analysis coverage remain.
 
-当前阶段：V0 — 被测服务与基础测试体系
+当前版本支持 Python / FastAPI / pytest 项目的本地分析：从 Git 变更识别函数与受影响 API，结合测试覆盖映射选择回归测试，并生成评估结果。
+
+验证分为两组：小型合成 fixture 有 10 个测试、4 个受控故障变更，Hybrid 命中 4/4；真实 FastAPI 模板基线有 58 个测试，5 个受控故障分别位于 `items.py`、`users.py` 和 `login.py`，Hybrid 命中 5/5。真实仓库两例新增场景分别选择 5/58 和 45/58 项，说明缩减幅度依变更而异。样本仍小，不能据此推断普遍效果或端到端提速。详见[真实仓库实验](./docs/experiments/full-stack-fastapi-template.md)。
+
+当前平台测试为 **64 项通过**。早期合成实验和实现记录见 [MVP 迭代记录](./docs/iterations/001-end-to-end-mvp.md)、[初始 MVP 实验](./docs/experiments/mvp-baseline.md) 和 [扩展对照实验](./docs/experiments/comparative-evidence.md)。
+
+### 当前边界与待完成项
+
+- 静态分析基于 Python AST，调用图仅覆盖有限的直接调用场景；不支持完整的动态调用、依赖注入和跨仓库分析。
+- 合成与真实仓库实验均提供了策略对照；当前未证明端到端提速，覆盖采集开销及重复计时仍需评估。
+- OpenSpec 任务 3.5 的影响分析边界测试已补齐：覆盖直接调用、no-impact 变更、嵌套函数、async endpoint 和保守回退行为。
+- 目前是本地 CLI 原型，尚无 UI 或生产部署。FastAPI 模板侧已有可选 GitHub Actions 工作流草案；发布 RegScope 版本、配置目标仓库变量并完成托管端验证后，才能启用该集成。
 
 ## Roadmap
 
 见 [ROADMAP.md](./ROADMAP.md)
+
+## 项目 Wiki
+
+快速了解项目目标、核心流程、实现边界和实验结果： [RegScope 项目 Wiki](./docs/wiki/regscope.md)
 
 ## 仓库划分
 

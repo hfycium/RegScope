@@ -7,6 +7,7 @@ from collections.abc import Iterable
 from pathlib import Path
 
 from .coverage_mapper import build_test_function_mapping
+from .mapping_provenance import create_mapping_provenance
 from .test_discovery import discover_test_ids, resolve_target_python
 
 
@@ -17,6 +18,7 @@ def collect_test_function_mappings(
     python_executable: str | Path | None = None,
     test_ids: Iterable[str] | None = None,
     allow_test_failures: bool = False,
+    mapping_path: str | Path | None = None,
 ) -> dict:
     """Collect and persist deterministic function coverage for target pytest tests."""
     root = Path(project_root).resolve()
@@ -82,9 +84,17 @@ def collect_test_function_mappings(
         "target_root": str(root),
         "python_executable": str(interpreter),
         "mappings": mappings,
+        "provenance": create_mapping_provenance(
+            root, interpreter, selected_test_ids
+        ),
     }
-    mapping_path = output / "coverage-mapping.json"
-    mapping_path.write_text(_as_json(result), encoding="utf-8")
+    mapping_output = (
+        Path(mapping_path).resolve()
+        if mapping_path is not None
+        else output / "coverage-mapping.json"
+    )
+    mapping_output.parent.mkdir(parents=True, exist_ok=True)
+    mapping_output.write_text(_as_json(result), encoding="utf-8")
     return result
 
 

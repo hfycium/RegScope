@@ -1,5 +1,9 @@
 # MVP experiment report
 
+> Historical initial-MVP snapshot. Comparative baselines and additional
+> controlled fault cases are reported in
+> [comparative evidence](./comparative-evidence.md).
+
 ## Reproduction
 
 Target fixture: `../_regscope-fixture`; interpreter:

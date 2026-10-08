@@ -416,10 +416,36 @@ fallback. The function-body fixture selected 5/7 tests (28.57% reduction) with
 commands, limits, and unavailable baselines are recorded in
 `docs/experiments/mvp-baseline.md`.
 
-**Final limitation.** Path Match and separately reported Dynamic Coverage Only
-baselines remain unavailable; they are explicitly documented rather than
-represented by invented metrics. The direct-call AST analysis also remains an
-MVP boundary, not a complete Python call graph.
+**Initial-MVP limitation (superseded for controlled experiments).** At this
+point Path Match and separately reported Dynamic Coverage Only baselines were
+unavailable. The direct-call AST analysis remains an MVP boundary, not a
+complete Python call graph.
+
+### 2026-10-07 — Comparative fault experiment expanded
+
+**Question / hypothesis.** Does hybrid selection retain known-failure recall
+when compared with file-level coverage and dynamic-only selection across
+several isolated business faults?
+
+**Change.** Added OpenSpec change `expanded-experiment-evidence`, a separate
+target fixture with three focused boundary tests, four isolated fault commits,
+and an experiment-only comparison CLI. The baselines share the same per-test
+coverage mapping: full suite, file-level coverage, Dynamic-only function
+intersection, and the existing hybrid selector.
+
+**Result.** All four fault-specific tests fail independently as intended. On
+the 10-test fixture, hybrid selected all tests and caught the known failure for
+both module-level constant faults; for two function-body faults it selected
+8/10 and caught the failure. Dynamic-only selected 0/10 and missed both
+module-level faults, while file-level coverage selected 9/10 and caught all
+four. Single-run times were close and noisy; no net end-to-end speedup is
+claimed because coverage acquisition still executes every test.
+
+**Artifacts.** See [comparative experiment report](../experiments/comparative-evidence.md).
+
+**Next boundary.** A larger real-project sample, repeated timing, and
+measurement including coverage collection are needed before making claims about
+production accuracy or speed.
 
 ## Entry template for each implementation step
 

@@ -19,7 +19,7 @@ def changed_files(project_root: str | Path, base: str, head: str) -> list[str]:
     root = Path(project_root).resolve()
     resolved_base = resolve_revision(root, base)
     resolved_head = resolve_revision(root, head)
-    output = _run_git(root, ["diff", "--name-only", "--no-ext-diff", resolved_base, resolved_head, "--"])
+    output = _run_git(root, ["diff", "--name-only", "--no-ext-diff", "--relative", resolved_base, resolved_head, "--"])
     return sorted(line for line in output.splitlines() if line)
 
 
@@ -28,7 +28,7 @@ def changed_head_lines(project_root: str | Path, base: str, head: str) -> dict[s
     root = Path(project_root).resolve()
     resolved_base = resolve_revision(root, base)
     resolved_head = resolve_revision(root, head)
-    output = _run_git(root, ["diff", "--unified=0", "--no-ext-diff", resolved_base, resolved_head, "--"])
+    output = _run_git(root, ["diff", "--unified=0", "--no-ext-diff", "--relative", resolved_base, resolved_head, "--"])
 
     lines_by_file: dict[str, set[int]] = {}
     current_file: str | None = None

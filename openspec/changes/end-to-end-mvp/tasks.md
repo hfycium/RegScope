@@ -25,7 +25,7 @@
 - [x] 3.3 Discover FastAPI endpoints and construct a bounded direct-call graph.
 - [x] 3.4 Traverse reverse paths from each changed function to endpoints;
   persist paths and unresolved-analysis warnings in `impact.json`.
-- [ ] 3.5 Add unit and integration tests for direct calls, no-impact changes,
+- [x] 3.5 Add unit and integration tests for direct calls, no-impact changes,
   nested functions, async endpoints, and conservative fallback behavior.
 
 ## 4. Select tests and explain results

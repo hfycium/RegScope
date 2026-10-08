@@ -30,6 +30,11 @@ def test_collects_one_coverage_report_per_test_and_persists_mapping(tmp_path: Pa
         return CompletedProcess(command, 0, stdout="", stderr="")
 
     monkeypatch.setattr(collector.subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        collector,
+        "create_mapping_provenance",
+        lambda *args: {"source_revision": "test-revision"},
+    )
 
     result = collect_test_function_mappings(
         tmp_path,
@@ -50,6 +55,40 @@ def test_collects_one_coverage_report_per_test_and_persists_mapping(tmp_path: Pa
     expected_digest = hashlib.sha256("tests/test_a.py::test_a".encode("utf-8")).hexdigest()[:12]
     assert commands[0][1]["env"]["COVERAGE_FILE"].endswith(f"0001-{expected_digest}")
     assert "no:cacheprovider" in commands[0][0]
+
+
+def test_collect_writes_mapping_to_requested_file(tmp_path: Path, monkeypatch):
+    app_dir = tmp_path / "app"
+    app_dir.mkdir()
+    (app_dir / "service.py").write_text("def alpha():\n    return 1\n", encoding="utf-8")
+    mapping_output = tmp_path / "artifacts" / "baseline.json"
+
+    def fake_run(command, **kwargs):
+        if command[3] == "json":
+            Path(command[command.index("-o") + 1]).write_text(
+                json.dumps({"files": {"app/service.py": {"executed_lines": [2]}}}),
+                encoding="utf-8",
+            )
+        return CompletedProcess(command, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(collector.subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        collector,
+        "create_mapping_provenance",
+        lambda *args: {"source_revision": "test-revision"},
+    )
+
+    result = collect_test_function_mappings(
+        tmp_path,
+        tmp_path / "work",
+        python_executable=tmp_path / "target-python",
+        test_ids=["tests/test_api.py::test_route"],
+        mapping_path=mapping_output,
+    )
+
+    assert json.loads(mapping_output.read_text(encoding="utf-8")) == result
+    assert (tmp_path / "work" / "per-test-coverage").is_dir()
+    assert not (tmp_path / "work" / "coverage-mapping.json").exists()
 
 
 def test_collect_raises_when_a_test_fails(tmp_path: Path, monkeypatch):

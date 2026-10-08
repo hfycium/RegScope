@@ -23,6 +23,15 @@ def select_tests(coverage_mapping: dict, impact: dict) -> dict:
         shared = sorted(affected.intersection(entry["functions"]))
         if shared:
             reasons[entry["test_id"]] = shared
+    if not reasons and mappings and impact.get("changed_files"):
+        fallback_reasons = ["No tests matched the affected functions; selecting all tests"]
+        return {
+            "schema_version": 1,
+            "strategy": "conservative-fallback",
+            "selected_tests": [entry["test_id"] for entry in mappings],
+            "unselected_tests": [],
+            "reasons": {entry["test_id"]: fallback_reasons for entry in mappings},
+        }
     return {
         "schema_version": 1,
         "strategy": "coverage-intersection",

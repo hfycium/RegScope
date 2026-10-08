@@ -2,4 +2,9 @@ __pycache__/
 *.py[oc]
 .pytest_cache/
 .pytest-tmp/
+.uv-cache/
+build/
+dist/
+*.egg-info/
+.regscope-experiment-output/
 .venv/

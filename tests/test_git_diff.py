@@ -53,6 +53,25 @@ def test_changed_files_keeps_deleted_file_but_head_lines_omits_it(git_project: P
     assert changed_head_lines(git_project, base, "HEAD") == {}
 
 
+def test_diff_paths_are_relative_to_nested_project_root(git_project: Path):
+    base = git(git_project, "rev-parse", "HEAD")
+    nested_root = git_project / "backend"
+    source = nested_root / "app" / "service.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("def alpha():\n    return 1\n", encoding="utf-8")
+    git(git_project, "add", "backend/app/service.py")
+    git(git_project, "commit", "-m", "add nested backend")
+    base = git(git_project, "rev-parse", "HEAD")
+
+    source.write_text("def alpha():\n    return 2\n", encoding="utf-8")
+    git(git_project, "add", "backend/app/service.py")
+    git(git_project, "commit", "-m", "change nested backend")
+    head = git(git_project, "rev-parse", "HEAD")
+
+    assert changed_files(nested_root, base, head) == ["app/service.py"]
+    assert changed_head_lines(nested_root, base, head) == {"app/service.py": [2]}
+
+
 def test_invalid_revision_has_clear_error(git_project: Path):
     with pytest.raises(ValueError, match="Could not run Git"):
         resolve_revision(git_project, "not-a-revision")
